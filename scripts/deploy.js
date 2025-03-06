@@ -1,4 +1,3 @@
-
 const hre = require("hardhat");
 const fs = require("fs");
 const path = require("path");
@@ -11,7 +10,7 @@ async function main() {
   // Deploy ArbitrageExecutor
   const ArbitrageExecutor = await hre.ethers.getContractFactory("ArbitrageExecutor");
   const arbitrageExecutor = await ArbitrageExecutor.deploy();
-  await arbitrageExecutor.deployed();
+  await arbitrageExecutor.waitForDeployment();
 
   console.log(`ArbitrageExecutor deployed to: ${arbitrageExecutor.address}`);
 
@@ -82,7 +81,7 @@ export const CONTRACT_ADDRESSES = {
     // Add new entry
     currentAddresses = currentAddresses.replace(
       '}',
-      networkEntry + '\n  }'
+      networkEntry + '\\n  }'
     );
   }
   
