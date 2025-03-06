@@ -1,4 +1,3 @@
-
 /**
  * Environment-specific configuration
  * This file manages different configurations for development, staging, and production
@@ -9,7 +8,7 @@ type Environment = 'development' | 'staging' | 'production';
 // Get current environment
 export const getCurrentEnvironment = (): Environment => {
   // For Vite, check the environment variable
-  const envMode = import.meta.env.MODE;
+  const envMode = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE;
   
   if (envMode === 'production') {
     // Check domain to distinguish between staging and production
@@ -47,11 +46,11 @@ export const getNetworkConfig = () => {
     case 'development':
     default:
       return {
-        defaultNetwork: 'optimism',
-        useTestnets: true,
+        defaultNetwork: import.meta.env.VITE_DEFAULT_NETWORK || 'optimism',
+        useTestnets: import.meta.env.VITE_USE_TESTNETS === 'true',
         rpcOverrides: {},
         enableAnalytics: false,
-        cdnBaseUrl: '', // Local assets
+        cdnBaseUrl: import.meta.env.VITE_CDN_BASE_URL || '', // Local assets
       };
   }
 };
@@ -61,9 +60,9 @@ export const getFeatureFlags = () => {
   const env = getCurrentEnvironment();
   
   const commonFlags = {
-    enableArbitrageExecution: true,
-    enablePriceMonitoring: true,
-    enableWalletConnect: true
+    enableArbitrageExecution: import.meta.env.VITE_ENABLE_ARBITRAGE_EXECUTION === 'true',
+    enablePriceMonitoring: import.meta.env.VITE_ENABLE_PRICE_MONITORING === 'true',
+    enableWalletConnect: import.meta.env.VITE_ENABLE_WALLET_CONNECT === 'true'
   };
   
   switch (env) {
@@ -95,8 +94,8 @@ export const getEnvVars = () => {
   
   // Common variables across environments
   const commonVars = {
-    appName: 'FlashTrade Logic',
-    apiVersion: 'v1'
+    appName: import.meta.env.VITE_APP_NAME || 'FlashTrade Logic',
+    apiVersion: import.meta.env.VITE_API_VERSION || 'v1'
   };
   
   switch (env) {
@@ -116,8 +115,8 @@ export const getEnvVars = () => {
     default:
       return {
         ...commonVars,
-        apiBaseUrl: 'http://localhost:8000',
-        wsEndpoint: 'ws://localhost:8001'
+        apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+        wsEndpoint: import.meta.env.VITE_WS_ENDPOINT || 'ws://localhost:8001'
       };
   }
 };
